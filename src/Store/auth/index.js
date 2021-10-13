@@ -3,7 +3,8 @@
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword
-} from 'firebase/auth'
+} from 'firebase/auth';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 
 
@@ -24,6 +25,15 @@ const authModule = {
             auth:false
         }   
     },
+    mutations:{
+        setUser(state,payload){
+            state.user = {
+                ...state.user,
+                ...payload
+            }
+            state.auth = true;
+        }
+    },
     actions:{
         async signup({commit},payload){
             try{
@@ -33,12 +43,16 @@ const authModule = {
                     payload.password
                 );
 
-
-                
-
-
+                const newUser = {
+                    uid:userCredential.user.uid,
+                    email:userCredential.user.email,
+                    isAdmin:false /// warning -  cloud function
+                }
+                await setDoc(doc(db,'users',userCredential.user.uid),newUser);
+                commit('setUser',newUser);
+                    
             }catch(error){
-
+                console.error(error)
             }
         }
     }
