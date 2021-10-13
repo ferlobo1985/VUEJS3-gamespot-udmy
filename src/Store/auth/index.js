@@ -38,6 +38,16 @@ const authModule = {
         }
     },
     actions:{
+        async autosign({commit,dispatch},payload){
+            try {
+                const userData = await dispatch('getUserProfile',payload.uid);
+                commit('setUser', userData);
+                return true;
+            } catch(error){
+                msgError(commit);
+                console.log(error)
+            }
+        },
         async getUserProfile({commit},payload){
             try{
                 const docSnap = await getDoc(doc(db,'users',payload));
@@ -48,6 +58,7 @@ const authModule = {
                     return null
                 }
             } catch(error){
+                msgError(commit);
                 console.log(error)
             }
         },
