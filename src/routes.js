@@ -26,7 +26,6 @@ const validateCheck = (to,from,next) => {
 }   
 
 
-
 routes.beforeEach((to,from,next)=>{
     if(from === START_LOCATION){
         const unsubscribe = onAuthStateChanged(auth, user => {
