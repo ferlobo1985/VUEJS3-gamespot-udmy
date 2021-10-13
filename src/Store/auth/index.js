@@ -1,5 +1,6 @@
 
 /* eslint-disable */
+import { msgError, msgSuccess } from '../../Tools/vuex'
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword
@@ -60,8 +61,11 @@ const authModule = {
                 const userData = await dispatch('getUserProfile',userCredential.user.uid);
                 commit('setUser',userData);
                 router.push('/user/dashboard');
+
+                
             } catch(error){
-                console.log(error)
+                console.log(error);
+                msgError(commit);
             }
         },
         async signup({commit},payload){
@@ -79,10 +83,11 @@ const authModule = {
                 }
                 await setDoc(doc(db,'users',userCredential.user.uid),newUser);
                 commit('setUser',newUser);
-                router.push('/user/dashboard');
-                    
+
+                msgSuccess(commit,'Welcome !!')
+                router.push('/user/dashboard');    
             }catch(error){
-                console.error(error)
+                msgError(commit);
             }
         }
     }
