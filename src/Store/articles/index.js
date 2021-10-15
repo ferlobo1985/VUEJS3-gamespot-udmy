@@ -3,7 +3,7 @@ import { msgSuccess, msgError } from '../../Tools/vuex';
 import { 
     doc, setDoc, getDocs, getDoc,collection,
     serverTimestamp, limit,deleteDoc,
-    orderBy, startAfter, query} from 'firebase/firestore';
+    orderBy, startAfter, query, updateDoc} from 'firebase/firestore';
 import { db } from '../../firebase';
 import router from '../../routes';
 
@@ -43,6 +43,17 @@ const articlesModule = {
         }
     },
     actions:{
+        async updateArticle({commit},payload){
+            try{
+                const docRef = doc(db,'articles', payload.id);
+                await updateDoc(docRef,{
+                    ...payload.values
+                });
+                msgSuccess(commit,'Updated');
+            } catch(error){
+                msgError(commit,error)
+            }
+        },
         async getArticle({commit},payload){
             try{
                 const docSnap = await getDoc(doc(db,'articles',payload));

@@ -51,6 +51,19 @@ export default {
           editor: null,
        }
    },
+   watch:{
+       content(){
+           this.loadContent();
+       }
+   },
+   methods:{
+       loadContent(){
+            if(this.content){
+                this.editor.commands.setContent(this.content);
+                this.$emit('update',this.editor.getHTML());
+            }
+       }
+   },
    mounted() {
     this.editor = new Editor({
       content: '',
@@ -61,13 +74,7 @@ export default {
             this.$emit('update',this.editor.getHTML());
         }
     });
-
-    if(this.content){
-        this.editor.commands.setContent(this.content);
-        this.$emit('update',this.editor.getHTML());
-    }
-
-
+    this.loadContent();
   },
 }
 </script>
